@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('face', function (Blueprint $table) {
             $table->id();
-            $table->json('face')->nullable();
+            $table->json('descriptor')->nullable();
             $table->timestamps();
         });
     }

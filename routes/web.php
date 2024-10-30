@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\FaceController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,9 +18,9 @@ Route::middleware([
 });
 
 //ROTAS FACE
-Route::get('/face/register', [UserController::class, 'create'])->name('face.create');
-Route::post('/face/register', [UserController::class, 'store'])->name('face.store');
-Route::get('/face/edit/{id}', [UserController::class, 'edit'])->name('face.edit');
-Route::get('/face/update/{id}', [UserController::class, 'edit'])->name('face.edit');
-Route::get('/face/delete/{id}', [UserController::class, 'delete'])->name('face.delete');
+Route::get('/face/register', [FaceController::class, 'create'])->name('face.create');
+Route::post('/face/register', [FaceController::class, 'store'])->name('face.store');
+Route::get('/face/edit/{id}', [FaceController::class, 'edit'])->name('face.edit');
+Route::get('/face/update/{id}', [FaceController::class, 'edit'])->name('face.edit');
+Route::get('/face/delete/{id}', [FaceController::class, 'delete'])->name('face.delete');
 

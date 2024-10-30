@@ -1,4 +1,9 @@
 <x-app-layout>
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('TCC Arthur Teixeira Kai - Face Recognition') }}
@@ -11,4 +16,5 @@
             </div>
         </div>
     </div>
+
 </x-app-layout>
