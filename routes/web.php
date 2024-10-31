@@ -24,3 +24,6 @@ Route::get('/face/edit/{id}', [FaceController::class, 'edit'])->name('face.edit'
 Route::get('/face/update/{id}', [FaceController::class, 'edit'])->name('face.edit');
 Route::get('/face/delete/{id}', [FaceController::class, 'delete'])->name('face.delete');
 
+Route::get('/face-login', [FaceController::class, 'showFaceLogin'])->name('face.login');
+Route::post('/face-login', [FaceController::class, 'faceLogin'])->name('face.submit');
+

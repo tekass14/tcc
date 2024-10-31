@@ -8,5 +8,13 @@ class Face extends Model
 {
     protected $table = 'face';
 
-    protected $fillable = ['descriptor'];
+    protected $fillable = [
+        'descriptor',
+        'user_id',
+];
+
+public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

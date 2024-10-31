@@ -30,6 +30,8 @@ class User extends Authenticatable
         'face_id',
     ];
 
+    
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -62,5 +64,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function face()
+    {
+        return $this->hasOne(Face::class);
     }
 }

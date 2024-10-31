@@ -24,7 +24,6 @@
 
         #container {
             position: relative;
-            /* Habilita o posicionamento absoluto do canvas */
             margin: 0px auto;
             width: 500px;
             height: 375px;
@@ -33,21 +32,17 @@
 
         #videoElement {
             width: 100%;
-            /* Garante que o vídeo preencha o contêiner */
             height: 100%;
             background-color: #666;
         }
 
         canvas {
             position: absolute;
-            /* Permite que o canvas se sobreponha ao vídeo */
             top: 0;
             left: 0;
             width: 100%;
-            /* Garante que o canvas preencha o contêiner */
             height: 100%;
             pointer-events: none;
-            /* Permite interações com o vídeo por baixo do canvas */
         }
 
         #registerButton {
@@ -64,18 +59,18 @@
     <h1>Cadastro de face</h1>
     <div id="container">
         <video autoplay="true" id="videoElement"></video>
-        <!-- O canvas será adicionado aqui pelo JavaScript -->
     </div>
     <button id="registerButton">Cadastrar Rosto</button>
 
-    <script src="/js/face-api.min.js"></script> <!-- Verifique se o caminho está correto -->
+    <script src="/js/face-api.min.js"></script>
+
 
     <script>
         const video = document.getElementById('videoElement');
         const container = document.getElementById('container');
         const registerButton = document.getElementById('registerButton');
         let canvas;
-        let faceData = null; // Variável para armazenar os dados do rosto detectado
+        let faceData = null;
 
         async function loadModels() {
             try {
@@ -109,7 +104,6 @@
         });
 
         video.addEventListener('play', async () => {
-            // Crie e adicione o canvas ao contêiner
             canvas = faceapi.createCanvasFromMedia(video);
             container.append(canvas);
             const displaySize = {
@@ -127,7 +121,7 @@
                         .withFaceDescriptor();
 
                     if (detections) {
-                        faceData = detections; // Armazene os dados do rosto detectado
+                        faceData = detections;
                         const resizedDetections = faceapi.resizeResults(detections, displaySize);
                         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
                         faceapi.draw.drawDetections(canvas, resizedDetections);
@@ -145,16 +139,14 @@
                 return;
             }
 
-            // Obtendo o token CSRF
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            // Aqui você pode enviar os dados do rosto para o servidor
             try {
                 const response = await fetch('/face/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken, // Incluindo o token CSRF
+                        'X-CSRF-TOKEN': csrfToken,
                     },
                     body: JSON.stringify({
                         descriptor: faceData
