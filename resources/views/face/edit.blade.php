@@ -1,79 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+@section('body')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Cadastro</title>
-    <style>
-        h1,
-        a {
-            font-family: sans-serif;
-            color: #333;
-        }
-
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-
-        #container {
-            position: relative;
-            /* Habilita o posicionamento absoluto do canvas */
-            margin: 0px auto;
-            width: 500px;
-            height: 375px;
-            border: 10px #333 solid;
-        }
-
-        #videoElement {
-            width: 100%;
-            /* Garante que o vídeo preencha o contêiner */
-            height: 100%;
-            background-color: #666;
-        }
-
-        canvas {
-            position: absolute;
-            /* Permite que o canvas se sobreponha ao vídeo */
-            top: 0;
-            left: 0;
-            width: 100%;
-            /* Garante que o canvas preencha o contêiner */
-            height: 100%;
-            pointer-events: none;
-            /* Permite interações com o vídeo por baixo do canvas */
-        }
-
-        #registerButton {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-
-<body>
-    <a href="/dashboard">Voltar</a>
-    <h1>Cadastro de face</h1>
-    <div id="container">
-        <video autoplay="true" id="videoElement"></video>
+    <div class="d-flex justify-content-center align-items-center flex-column">
+        <h1 class="page-title text-gray-900"> Atualizar Face </h1> <br>
+        <!-- Container para vídeo e detecção -->
+        <div id="container" class="position-relative">
+            <video autoplay="true" id="videoElement" class="rounded shadow"></video>
+            <canvas id="detectionCanvas" class="position-absolute"></canvas>
+        </div>
+        <div class="d-flex mt-4">
+            <button id="registerButton" class="btn btn-primary mr-3">Atualizar</button>
+            <button onclick="window.history.back()" class="btn btn-primary ml-3">
+                Voltar
+            </button>
+        </div>
     </div>
-    <button id="registerButton">Cadastrar Rosto</button>
 
     <script src="/js/face-api.min.js"></script>
 
     <script>
         const video = document.getElementById('videoElement');
+        const detectionCanvas = document.getElementById('detectionCanvas');
         const container = document.getElementById('container');
         const registerButton = document.getElementById('registerButton');
-        let canvas;
         let faceData = null;
 
         async function loadModels() {
@@ -84,9 +35,7 @@
                 console.log("Modelos carregados com sucesso");
             } catch (error) {
                 console.error("Erro ao carregar modelos:", error);
-                alert(
-                    "Erro ao carregar modelos. Verifique se os modelos estão na pasta correta e recarregue a página."
-                );
+                alert("Erro ao carregar modelos. Verifique se estão na pasta correta.");
             }
         }
 
@@ -96,45 +45,59 @@
                     video: true
                 });
                 video.srcObject = stream;
+
+                video.addEventListener('loadedmetadata', () => {
+                    setupCanvas();
+                    detectFaces();
+                });
             } catch (error) {
                 console.error("Erro ao acessar a câmera:", error);
-                alert("Erro ao acessar a câmera. Verifique as permissões e o console para mais detalhes.");
+                alert("Erro ao acessar a câmera. Verifique as permissões.");
             }
         }
 
-        video.addEventListener('loadedmetadata', () => {
-            console.log('Largura do vídeo:', video.videoWidth);
-            console.log('Altura do vídeo:', video.videoHeight);
-        });
+        function setupCanvas() {
+            const videoWidth = video.videoWidth;
+            const videoHeight = video.videoHeight;
 
-        video.addEventListener('play', async () => {
-            canvas = faceapi.createCanvasFromMedia(video);
-            container.append(canvas);
+            // Ajustar dimensões do canvas para corresponder ao vídeo
+            detectionCanvas.width = videoWidth;
+            detectionCanvas.height = videoHeight;
+
+            // Ajustar dimensões do container
+            container.style.width = `${videoWidth}px`;
+            container.style.height = `${videoHeight}px`;
+
+            // Garantir que o canvas cobre o vídeo completamente
+            detectionCanvas.style.width = "100%";
+            detectionCanvas.style.height = "100%";
+        }
+
+        async function detectFaces() {
             const displaySize = {
                 width: video.videoWidth,
                 height: video.videoHeight
             };
+            faceapi.matchDimensions(detectionCanvas, displaySize);
 
-            if (displaySize.width > 0 && displaySize.height > 0) {
-                faceapi.matchDimensions(canvas, displaySize);
+            setInterval(async () => {
+                const detections = await faceapi
+                    .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+                    .withFaceLandmarks()
+                    .withFaceDescriptor();
 
-                setInterval(async () => {
-                    const detections = await faceapi
-                        .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
-                        .withFaceLandmarks()
-                        .withFaceDescriptor();
+                if (detections) {
+                    faceData = detections;
+                    const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
-                    if (detections) {
-                        const resizedDetections = faceapi.resizeResults(detections, displaySize);
-                        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-                        faceapi.draw.drawDetections(canvas, resizedDetections);
-                        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-                    }
-                }, 100);
-            } else {
-                console.error('Dimensões inválidas do vídeo:', displaySize);
-            }
-        });
+                    const ctx = detectionCanvas.getContext('2d');
+                    ctx.clearRect(0, 0, detectionCanvas.width, detectionCanvas.height);
+
+                    faceapi.draw.drawDetections(detectionCanvas, resizedDetections);
+                    faceapi.draw.drawFaceLandmarks(detectionCanvas, resizedDetections);
+                }
+            }, 100);
+        }
 
         registerButton.addEventListener('click', async () => {
             if (!faceData) {
@@ -145,32 +108,57 @@
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             try {
-                const response = await fetch('/face/register', {
+                const response = await fetch('/face/update/ {{ auth()->user()->face_id }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken,
                     },
                     body: JSON.stringify({
-                        descriptor: faceData
-                            .descriptor
+                        descriptor: faceData.descriptor
                     }),
                 });
 
                 if (response.ok) {
-                    alert("Rosto Atualizado com sucesso!");
+                    alert("Rosto atualizado com sucesso!");
+                    window.location.href = "/dashboard";
                 } else {
                     alert("Erro ao cadastrar o rosto.");
                 }
             } catch (error) {
                 console.error("Erro ao enviar os dados do rosto:", error);
-                alert("Erro ao cadastrar o rosto. Verifique o console para mais detalhes.");
+                alert("Erro ao cadastrar. Verifique o console.");
             }
         });
 
-
         loadModels().then(startVideo);
     </script>
-</body>
 
-</html>
+    <style>
+        #container {
+            position: relative;
+            margin: 0 auto;
+            border: 2px solid #333;
+        }
+
+        video {
+            display: block;
+            width: 100%;
+            height: auto;
+            background-color: #666;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .btn-primary {
+            font-size: 18px;
+            padding: 10px 20px;
+        }
+    </style>
+@endsection

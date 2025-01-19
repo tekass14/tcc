@@ -1,68 +1,81 @@
-<x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+@extends('layouts.guest')
 
-        <x-validation-errors class="mb-4" />
+<title>Cadastro</title>
 
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
+@section('body')
 
-            <div>
-                <x-label for="name" value="{{ __('Nome') }}" />
-                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Senha') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="password_confirmation" value="{{ __('Confirmar Senha') }}" />
-                <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            <div class="block mt-4 d-flex flex-column">
-                <div>
-                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Deseja cadastrar face?') }}</span>
+    <body class="d-flex flex-column">
+        <script src="template/dist/js/demo-theme.min.js?1692870487"></script>
+        <div class="page page-center">
+            <div class="container container-tight py-4">
+                <div class="text-center mb-4">
+                    <a href="." class="navbar-brand navbar-brand-autodark">
+                        <img src="template/static/logo.svg" width="110" height="32" alt="Tabler"
+                            class="navbar-brand-image">
+                        <p><strong>FACE RECOGNITION</strong></p>
+                    </a>
                 </div>
-                <x-checkbox id="cadastrar_face" name="face" />
-            </div>
+                <form class="card card-md" action="{{ route('register') }}" method="POST" autocomplete="off" novalidate>
+                    @csrf
+                    <div class="card-body">
+                        <h2 class="h2 text-center mb-4">Criar nova conta</h2>
 
-
-            @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-                <div class="mt-4">
-                    <x-label for="terms">
-                        <div class="flex items-center">
-                            <x-checkbox name="terms" id="terms" required />
-
-                            <div class="ms-2">
-                                {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                                        'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">'.__('Terms of Service').'</a>',
-                                        'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">'.__('Privacy Policy').'</a>',
-                                ]) !!}
-                            </div>
+                        <!-- Nome -->
+                        <div class="mb-3">
+                            <label class="form-label">Nome</label>
+                            <input id="name" name="name" type="text"
+                                class="form-control @error('name') is-invalid @enderror" placeholder="Seu nome"
+                                value="{{ old('name') }}">
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-                    </x-label>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input id="email" name="email" type="email"
+                                class="form-control @error('email') is-invalid @enderror" placeholder="seuemail@email.com"
+                                value="{{ old('email') }}">
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Senha -->
+                        <div class="mb-3">
+                            <label class="form-label">Senha</label>
+                            <input id="password" name="password" type="password"
+                                class="form-control @error('password') is-invalid @enderror" placeholder="Sua senha"
+                                autocomplete="off">
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Confirmar Senha -->
+                        <div class="mb-3">
+                            <label class="form-label">Confirmar senha</label>
+                            <input id="password_confirmation" name="password_confirmation" type="password"
+                                class="form-control" placeholder="Sua senha" autocomplete="off">
+                        </div>
+
+                        <!-- Botão de Submissão -->
+                        <div class="form-footer">
+                            <button type="submit" class="btn btn-primary w-100">Criar conta</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="text-center text-secondary mt-3">
+                    Já tem uma conta? <a href="{{ route('login') }}" tabindex="-1">Login</a>
                 </div>
-            @endif
-
-            <div class="flex items-center justify-end mt-4">
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                    {{ __('Já tem uma conta?') }}
-                </a>
-
-                <x-button class="ms-4">
-                    {{ __('Cadastrar') }}
-                </x-button>
             </div>
-        </form>
-    </x-authentication-card>
-</x-guest-layout>
+        </div>
+
+        <!-- Libs JS -->
+        <!-- Tabler Core -->
+        <script src="template/dist/js/tabler.min.js?1692870487" defer></script>
+        <script src="template/dist/js/demo.min.js?1692870487" defer></script>
+    </body>
+@endsection

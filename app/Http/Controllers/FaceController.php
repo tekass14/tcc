@@ -10,115 +10,139 @@ use App\Models\User;
 
 class FaceController extends Controller
 {
-    public function create(){
+    public function create()
+    {
         return view('face.create');
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([
             'descriptor' => 'required|array'
         ]);
 
-        $descriptor = $request->input('descriptor');
+        try {
+            $descriptor = $request->input('descriptor');
 
-        // Salvar o rosto
-        $faceData = new Face();
-        $faceData->user_id = auth()->id();
-        $faceData->descriptor = json_encode($descriptor); 
-        $faceData->save();
+            // Salvar o rosto
+            $faceData = new Face();
+            $faceData->user_id = auth()->id();
+            $faceData->descriptor = json_encode($descriptor);
+            $faceData->save();
 
-        // Associar o face_id ao usuário autenticado
-        $user = Auth::user(); 
-        $user->face_id = $faceData->id; 
-        $user->save(); 
+            // Associar o face_id ao usuário autenticado
+            $user = Auth::user();
+            $user->face_id = $faceData->id;
+            $user->save();
 
-        return redirect('/dashboard')->with('success', 'Rosto registrado com sucesso!');
+            return redirect('/dashboard')->with('success', 'Rosto registrado com sucesso!');
+        } catch (\Exception $e) {
+            Log::error("Erro ao salvar rosto: {$e->getMessage()}");
+            return redirect()->back()->withErrors('Erro ao registrar o rosto. Tente novamente.');
+        }
     }
 
-    public function edit($id)
-    {
-        $face = Face::findOrFail($id);
-        return view('face.edit', ['face' => $face]);
+    public function edit(){
+        return view('face.edit');
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
+        
         $request->validate([
             'descriptor' => 'required|array'
         ]);
 
-        $descriptor = $request->input('descriptor');
+        try {
+            $descriptor = $request->input('descriptor');
 
-        $faceData = Face::findOrFail($id);
-        $faceData->descriptor = json_encode($descriptor); 
-        $faceData->save();
+            // Salvar o rosto
+            $faceData = Face::findOrFail($id);
+            $faceData->user_id = auth()->id();
+            $faceData->descriptor = json_encode($descriptor);
+            $faceData->update();
 
-        return redirect('/dashboard')->with('success', 'Rosto atualizado com sucesso!');
+            // Associar o face_id ao usuário autenticado
+            $user = Auth::user();
+            $user->face_id = $faceData->id;
+            $user->update();
+
+            return redirect('/dashboard')->with('success', 'Rosto atualizado com sucesso!');
+        } catch (\Exception $e) {
+            Log::error("Erro ao salvar rosto: {$e->getMessage()}");
+            return redirect()->back()->withErrors('Erro ao atualizar o rosto. Tente novamente.');
+        }
     }
 
-    public function destroy($id)
-    {
-        $face = Face::findOrFail($id);
-        $face->delete();
+    public function delete($id){
+        try {
+            $face = Face::findOrdFail($id);
+            $face->forceDelete();
 
-        return redirect('/dashboard')->with('success', 'Rosto apagado com sucesso!');
+            return redirect('/dashboard')->with('success', 'Rosto deletado com sucesso!');
+        } catch (\Exception $e) {
+            Log::error("Erro ao deletar rosto: {$e->getMessage()}");
+            return redirect()->back()->withErrors('Erro ao deletar o rosto. Tente novamente.');
+        }
     }
 
-    public function showFaceLogin()
-    {
+    public function showFaceLogin(){
         return view('face.login');
     }
 
     public function faceLogin(Request $request)
-{
-    $request->validate(['descriptor' => 'required']);
+    {
+        $request->validate(['descriptor' => 'required']);
 
-    $inputDescriptor = is_string($request->input('descriptor'))
-        ? json_decode($request->input('descriptor'), true)
-        : $request->input('descriptor');
+        try {
+            // Obter o descritor de entrada
+            $inputDescriptor = is_string($request->input('descriptor'))
+                ? json_decode($request->input('descriptor'), true)
+                : $request->input('descriptor');
 
-    Log::info('Input Descriptor:', $inputDescriptor);
+            Log::info('Descritor facial recebido:', $inputDescriptor);
 
-    $users = User::with('face')->get();
+            // Obter todos os usuários com descritores faciais
+            $users = User::with('face')->get();
 
-    if ($users->isEmpty()) {
-        Log::warning('No users found for face login.');
-    }
+            if ($users->isEmpty()) {
+                Log::warning('Nenhum usuário com descritor facial encontrado.');
+                return response()->json(['error' => 'Nenhum usuário registrado para login facial.'], 404);
+            }
 
-    foreach ($users as $user) {
-        $storedDescriptor = is_string($user->face->descriptor)
-            ? json_decode($user->face->descriptor, true)
-            : $user->face->descriptor;
+            foreach ($users as $user) {
+                $storedDescriptor = is_string($user->face->descriptor)
+                    ? json_decode($user->face->descriptor, true)
+                    : $user->face->descriptor;
 
-        if ($this->compareFace($inputDescriptor, $storedDescriptor)) {
-            Auth::login($user);
+                if ($this->compareFace($inputDescriptor, $storedDescriptor)) {
+                    Auth::login($user);
 
-            $token = $user->createToken('YourAppName')->plainTextToken;
+                    $token = $user->createToken('YourAppName')->plainTextToken;
 
-            Log::info('User logged in:', ['user_id' => $user->id, 'token' => $token]);
+                    Log::info('Usuário autenticado com sucesso.', ['user_id' => $user->id]);
 
-            return response()->json([
-                'success' => 'Bem-vindo, ' . $user->name,
-                'token' => $token,
-                'user' => $user
-            ]);
+                    return response()->json([
+                        'token' => $token,
+                        'user' => $user
+                    ]);
+                }
+            }
+
+            Log::warning('Falha no login facial. Nenhum rosto correspondente encontrado.');
+            return response()->json(['error' => 'Rosto não reconhecido.'], 401);
+        } catch (\Exception $e) {
+            Log::error("Erro no login facial: {$e->getMessage()}");
+            return response()->json(['error' => 'Erro no servidor.'], 500);
         }
     }
-
-    Log::warning('Face login failed for descriptor: ', $inputDescriptor);
-    return response()->json(['error' => 'Rosto não reconhecido.'], 401);
-}
-
-
-
-
-
 
     private function compareFace($inputDescriptor, $storedDescriptor)
     {
         $threshold = 0.6; // Valor de tolerância para reconhecimento
         $distance = $this->euclideanDistance($inputDescriptor, $storedDescriptor);
+
+        Log::info("Distância calculada: {$distance}, Limiar: {$threshold}");
+
         return $distance < $threshold;
     }
 
