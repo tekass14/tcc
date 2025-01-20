@@ -55,7 +55,7 @@ class FaceController extends Controller
         try {
             $descriptor = $request->input('descriptor');
 
-            // Salvar o rosto
+            // Atualiza o rosto
             $faceData = Face::findOrFail($id);
             $faceData->user_id = auth()->id();
             $faceData->descriptor = json_encode($descriptor);
