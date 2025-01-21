@@ -12,11 +12,8 @@
     <link rel="shortcut icon" type="imagex/png" href="{{ asset('img/logo.ico') }}">
     <title>Face Recognition</title>
     <!-- CSS files -->
-    <link href="template/dist/css/tabler.min.css?1692870487" rel="stylesheet" />
-    <link href="template/dist/css/tabler-flags.min.css?1692870487" rel="stylesheet" />
-    <link href="template/dist/css/tabler-payments.min.css?1692870487" rel="stylesheet" />
-    <link href="template/dist/css/tabler-vendors.min.css?1692870487" rel="stylesheet" />
     <link href="{{ asset('template/dist/css/tabler.min.css') }}" rel="stylesheet" />
+    <script src="{{ asset('template/dist/js/tabler.min.js') }}"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -52,8 +49,7 @@
     </div>
 </body>
 
-@livewireScripts
 <!-- Tabler Core -->
-<script src="template/dist/js/tabler.min.js?1692870487" defer></script>
+@livewireScripts
 
 </html>
