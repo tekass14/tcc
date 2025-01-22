@@ -9,7 +9,15 @@ class CategoriaController extends Controller
 {
     public function index(Request $request)
     {
-        return view('categoria.index', ['categorias' => Categoria::orderBy('created_at', 'desc')->paginate(10)]);
+        $search = $request->get('search'); 
+
+    $categorias = Categoria::when($search, function ($query) use ($search) {
+        return $query->where('nome', 'like', '%' . $search . '%');
+    })
+    ->orderBy('created_at', 'desc')
+    ->paginate(10);
+
+    return view('categoria.index', compact('categorias'));
     }
 
     public function create(Request $request)

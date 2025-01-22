@@ -3,7 +3,7 @@
         <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
             <a href="/dashboard" class="d-flex align-items-center">
                 <img src="{{asset('img/logo.ico')}}" width="110" height="32" alt="Tabler" class="navbar-brand-image me-2">
-                <p class="mb-0"><strong>FACE RECOGNITION</strong></p>
+                <p class="mb-0"><strong>SECURESHOP_ID</strong></p>
             </a>
         </h1>
         <div class="navbar-nav flex-row order-md-last">

@@ -42,7 +42,7 @@ Route::get('/categoria',               [CategoriaController::class, 'index'])->n
 Route::get('/categoria/create',        [CategoriaController::class, 'create'])->name('categoria.create');
 Route::post('/categoria/create',       [CategoriaController::class, 'store'])->name('categoria.store');
 Route::get('/categoria/edit/{id}',     [CategoriaController::class, 'edit'])->name('categoria.edit');
-Route::post('/categoria/update/{id}',  [CategoriaController::class, 'update'])->name('categoria.update');
+Route::put('/categoria/update/{id}',  [CategoriaController::class, 'update'])->name('categoria.update');
 Route::get('/categoria/delete/{id}',   [CategoriaController::class, 'delete'])->name('categoria.delete');
 
 //ROTAS PRODUTO
@@ -58,7 +58,7 @@ Route::get('/cliente',               [ClienteController::class, 'index'])->name(
 Route::get('/cliente/create',        [ClienteController::class, 'create'])->name('cliente.create');
 Route::post('/cliente/create',       [ClienteController::class, 'store'])->name('cliente.store');
 Route::get('/cliente/edit/{id}',     [ClienteController::class, 'edit'])->name('cliente.edit');
-Route::post('/cliente/update/{id}',  [ClienteController::class, 'update'])->name('cliente.update');
+Route::put('/cliente/update/{id}',  [ClienteController::class, 'update'])->name('cliente.update');
 Route::get('/cliente/delete/{id}',   [ClienteController::class, 'delete'])->name('cliente.delete');
 
 //ROTAS VENDA
@@ -67,7 +67,7 @@ Route::get('/venda/create',        [VendaController::class, 'create'])->name('ve
 Route::get('/venda/show/{id}',    [VendaController::class, 'show'])->name('venda.show');
 Route::post('/venda/create',       [VendaController::class, 'store'])->name('venda.store');
 Route::get('/venda/edit/{id}',     [VendaController::class, 'edit'])->name('venda.edit');
-Route::post('/venda/update/{id}',  [VendaController::class, 'update'])->name('venda.update');
+Route::put('/venda/update/{id}',  [VendaController::class, 'update'])->name('venda.update');
 Route::get('/venda/delete/{id}',   [VendaController::class, 'delete'])->name('venda.delete');
 
 //ROTAS ITEM_VENDA

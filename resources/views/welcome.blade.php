@@ -1,12 +1,12 @@
 @extends('layouts.guest')
 
 @section('header')
-    Bem-vindo ao Face Recognition
+    Bem-vindo ao SecureShopID
 @endsection
 
 @section('body')
     <div class="container text-center py-5">
-        <h1 class="display-4">Bem-vindo ao Sistema de Reconhecimento Facial</h1>
+        <h1 class="display-4">Bem-vindo ao meu site!</h1>
         <p class="lead mt-3">
             Utilize o reconhecimento facial para facilitar o login.
         </p>

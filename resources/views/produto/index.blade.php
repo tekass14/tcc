@@ -11,6 +11,20 @@
         <div class="page-wrapper">
             <div class="page-body">
                 <div class="container-xl">
+                    <!-- Formulário de busca -->
+                    <form method="GET" action="{{ route('produto.index') }}" class="mb-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="search" placeholder="Buscar por nome, marca ou modelo"
+                                value="{{ request()->get('search') }}">
+                            <button class="btn btn-primary" type="submit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.742a6.5 6.5 0 1 0-1.416 1.416l3.778 3.778a1 1 0 0 0 1.416-1.416l-3.778-3.778zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+
                     <table class="table">
                         <thead>
                             <tr>
@@ -22,6 +36,8 @@
                                 <td class="fw-bold" scope="col">Descrição</td>
                                 <td class="fw-bold" scope="col">Data de Cadastro</td>
                                 <td class="fw-bold" scope="col">Ações</td>
+                                <td class="fw-bold" scope="col"></td>
+                                
                                 <td class="fw-bold" scope="col">
                                     <a href="{{ route('produto.create') }}" class="btn btn-success"
                                         title="Adicionar Produto">
@@ -57,7 +73,9 @@
                                                 </svg>
                                             </button>
                                         </a>
-                                        <a href="{{ route('produto.delete', [$produto->id]) }}">
+                                    </td>
+                                    <td>
+                                    <a href="{{ route('produto.delete', [$produto->id]) }}">
                                             <button class="btn border-0">
                                                 Deletar &nbsp; <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                     height="24" viewBox="0 0 24 24" fill="none" stroke="#ff0000"
@@ -75,7 +93,7 @@
                         @endforeach
                     </table>
                     <div class="pagination">
-                        {{ $vendas->links() }}
+                        {{ $produtos->links() }}
                     </div>
                 </div>
             </div>

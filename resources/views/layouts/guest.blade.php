@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="shortcut icon" type="imagex/png" href="{{ asset('img/logo.ico') }}">
-    <title>Face Recognition</title>
+    <title>SecureShop_ID</title>
     <!-- CSS files -->
     <link href="{{ asset('template/dist/css/tabler.min.css') }}" rel="stylesheet" />
     <script src="{{ asset('template/dist/js/tabler.min.js') }}"></script>

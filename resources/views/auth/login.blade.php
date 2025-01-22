@@ -12,7 +12,7 @@
                     <a href="/" class="navbar-brand navbar-brand-autodark">
                         <img src="template/static/logo.svg" width="110" height="32" alt="Tabler"
                             class="navbar-brand-image">
-                        <p><strong>FACE RECOGNITION</strong></p>
+                        <p><strong>SECURESHOP_ID</strong></p>
                     </a>
                 </div>
                 <div class="card card-md">

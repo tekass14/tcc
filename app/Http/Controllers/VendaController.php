@@ -14,11 +14,22 @@ class VendaController extends Controller
 {
     public function index(Request $request)
     {
-    return view('venda.index', [
-        'vendas' => Venda::orderBy('created_at', 'desc')->paginate(10),
-        'clientes' => Cliente::all(),
-        'users' => User::all()
-    ]);
+        $search = $request->get('search');
+
+        $vendas = Venda::when($search, function ($query) use ($search) {
+            return $query->whereHas('responsavel', function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })->orWhereHas('cliente', function ($query) use ($search) {
+                $query->where('nome', 'like', '%' . $search . '%');
+            });
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+    
+        $users = User::all();
+        $clientes = Cliente::all();
+    
+        return view('venda.index', compact('vendas', 'users', 'clientes'));
     }
 
     public function create(Request $request)

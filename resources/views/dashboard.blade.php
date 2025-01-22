@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    Projeto Integrador Arthur Teixeira Kai - Face Recognition
+    Projeto Integrador Arthur Teixeira Kai - SecureShopID
 @endsection
 
 @section('body')

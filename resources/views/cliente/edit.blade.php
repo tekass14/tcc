@@ -10,6 +10,7 @@
                 <form class="card card-md" action="{{ route('cliente.update', [$cliente->id]) }}" method="POST"
                     autocomplete="off">
                     @csrf
+                    @method('PUT')
                     <div class="card-body">
                         <h2 class="h2 text-center mb-4">Atualizar Cliente</h2>
 

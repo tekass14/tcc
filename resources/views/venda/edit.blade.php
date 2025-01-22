@@ -9,6 +9,7 @@
             <div class="container container-tight py-4">
                 <form class="card card-md" action="{{ route('venda.update', [$venda->id]) }}" method="POST" autocomplete="off">
                     @csrf
+                    @method('PUT')
                     <div class="card-body">
                         <h2 class="h2 text-center mb-4">Atualizar Venda</h2>
 

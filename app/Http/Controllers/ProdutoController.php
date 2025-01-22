@@ -10,9 +10,17 @@ class ProdutoController extends Controller
 {
     public function index(Request $request)
     {
-        return view('produto.index', [
-            'produtos' => Produto::orderBy('created_at', 'desc')->paginate(10),
-            'categorias' => Categoria::all()]);
+        $search = $request->get('search');
+
+    $produtos = Produto::when($search, function ($query) use ($search) {
+        return $query->where('nome', 'like', '%' . $search . '%')
+                     ->orWhere('marca', 'like', '%' . $search . '%')
+                     ->orWhere('modelo', 'like', '%' . $search . '%');
+    })
+    ->orderBy('created_at', 'desc')
+    ->paginate(10); 
+
+    return view('produto.index', compact('produtos'));
     }
 
     public function create(Request $request)
