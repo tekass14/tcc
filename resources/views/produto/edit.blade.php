@@ -65,7 +65,7 @@
                         </div>
                         <!-- Botão de Submissão -->
                         <div class="form-footer">
-                            <button type="submit" class="btn btn-primary w-100">Criar</button>
+                            <button type="submit" class="btn btn-primary w-100">Atualizar</button>
                         </div>
                     </div>
                 </form>

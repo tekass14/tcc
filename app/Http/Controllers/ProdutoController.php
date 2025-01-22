@@ -10,7 +10,9 @@ class ProdutoController extends Controller
 {
     public function index(Request $request)
     {
-        return view('produto.index', ['produtos' => produto::all()],['categorias' => Categoria::all()]);
+        return view('produto.index', [
+            'produtos' => Produto::orderBy('created_at', 'desc')->paginate(10),
+            'categorias' => Categoria::all()]);
     }
 
     public function create(Request $request)

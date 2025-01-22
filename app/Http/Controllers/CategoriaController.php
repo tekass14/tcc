@@ -9,7 +9,7 @@ class CategoriaController extends Controller
 {
     public function index(Request $request)
     {
-        return view('categoria.index', ['categorias' => Categoria::all()]);
+        return view('categoria.index', ['categorias' => Categoria::orderBy('created_at', 'desc')->paginate(10)]);
     }
 
     public function create(Request $request)

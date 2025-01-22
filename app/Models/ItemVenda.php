@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ItemVenda extends Model
 {
+
+    use HasFactory;
     protected $fillable = [
         'produto_id',  
         'venda_id',    
@@ -14,11 +17,11 @@ class ItemVenda extends Model
 
     public function produto()
     {
-        return $this->hasMany(Produto::class);
+        return $this->belongsTo(Produto::class);
     }
 
     public function products()
     {
-        return $this->hasMany(Venda::class);
+        return $this->belongsTo(Venda::class);
     }
 }

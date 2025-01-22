@@ -7,56 +7,49 @@
     <body class="d-flex flex-column">
         <div class="page page-center">
             <div class="container container-tight py-4">
-                <form class="card card-md" action="{{ route('itemVenda.edit', []) }}" method="POST" autocomplete="off">
+                <form class="card card-md" action="{{ route('itemVenda.update', [$itemVenda->id]) }}" method="POST"
+                    autocomplete="off">
                     @csrf
+                    @method('PUT')
                     <div class="card-body">
-                        <h2 class="h2 text-center mb-4">Cadastrar Produtos da Venda</h2>
+                        <h2 class="h2 text-center mb-4">Atualizar Produto da Venda</h2>
 
-                        <!-- Nome -->
                         <div class="mb-3">
                             <label class="form-label required">Produto</label>
-                            <div class="input-group mb-2">
-                                <select value="{{ $itemVenda->produto_id }}" name="produto" id="produto">
-                                    @if ($produtos->isEmpty())
-                                        <option value="" disabled>Não há produtos Cadastrados</option>
-                                    @else
-                                        @foreach ($produtos as $produto)
-                                            <option value="{{ $produto->id }}">{{ $produto->nome }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                <input class="form-control" type="number"></input>
+                            <div class="row g-2 align-items-center mb-2">
+                                <div class="col-md-8">
+                                    <select name="produto" class="form-select">
+                                        @if ($produtos->isEmpty())
+                                            <option value="" disabled>Não há produtos cadastrados</option>
+                                        @else
+                                            @foreach ($produtos as $produto)
+                                                <option value="{{ $produto->id }}"
+                                                    {{ $produto->id == $itemVenda->produto_id ? 'selected' : '' }}>
+                                                    {{ $produto->nome }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <input value="{{ $itemVenda->quantidade }}" type="number" name="quantidade"
+                                        class="form-control" placeholder="Qtd">
+                                </div>
                             </div>
                         </div>
 
+                        <!-- Venda -->
                         <div class="mb-3">
-                            <label class="form-label required">Cliente</label>
-                            <select class="form-select @error('cliente')is-invalid @enderror" name="cliente" id="cliente">
-                                @if ($clientes->isEmpty())
-                                    <option value="" disabled>Não há Clientes Cadastrados</option>
-                                @else
-                                    @foreach ($clientes as $cliente)
-                                        <option value="{{ $cliente->id }}">{{ $cliente->nome }}</option>
-                                    @endforeach
-                                @endif
+                            <label class="form-label required">Venda</label>
+                            <select class="form-select @error('venda')is-invalid @enderror" name="venda" id="venda">
+                                <option value="{{ $itemVenda->venda_id }}">#{{ $itemVenda->venda_id }}</option>
                             </select>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label required">Cliente</label>
-                            <select class="form-select @error('cliente')is-invalid @enderror" name="cliente" id="cliente">
-                                @if ($clientes->isEmpty())
-                                    <option value="" disabled>Não há Clientes Cadastrados</option>
-                                @else
-                                    @foreach ($clientes as $cliente)
-                                        <option value="{{ $cliente->id }}">{{ $cliente->nome }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
                         <!-- Botão de Submissão -->
                         <div class="form-footer">
-                            <button type="submit" class="btn btn-primary w-100">Criar</button>
+                            <button type="submit" class="btn btn-primary w-100">Atualizar</button>
                         </div>
                     </div>
                 </form>

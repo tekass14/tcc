@@ -75,6 +75,6 @@ Route::get('/itemVenda/{idVenda}',                         [ItemVendaController:
 Route::get('/itemVenda/create/{idVenda}',                  [ItemVendaController::class, 'create'])->name('itemVenda.create');
 Route::post('/itemVenda/create',                           [ItemVendaController::class, 'store'])->name('itemVenda.store');
 Route::get('/itemVenda/edit/{id}',                         [ItemVendaController::class, 'edit'])->name('itemVenda.edit');
-Route::post('/itemVenda/update/{id}',                      [ItemVendaController::class, 'update'])->name('itemVenda.update');
+Route::put('/itemVenda/update/{id}',                      [ItemVendaController::class, 'update'])->name('itemVenda.update');
 Route::get('/itemVenda/delete/{id}',                       [ItemVendaController::class, 'delete'])->name('itemVenda.delete');
 

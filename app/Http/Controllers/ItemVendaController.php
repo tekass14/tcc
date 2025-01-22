@@ -11,8 +11,9 @@ class ItemVendaController extends Controller
 {
     public function index(Request $request, $idVenda)
     {
+        
         return view('itemVenda.index', [
-            'itemVendas' => ItemVenda::all(),
+            'itemVendas' => ItemVenda::orderBy('created_at', 'desc')->paginate(10),
             'produtos' => Produto::all(),
             'venda' => $idVenda
         ]);
@@ -63,17 +64,23 @@ class ItemVendaController extends Controller
     
 
     public function update(Request $request, $id)
-    {
+{
+    // Validação
+    $validated = $request->validate([
+        'produto'    => 'required|exists:produtos,id',  
+        'quantidade' => 'required|integer|min:1',      
+        'venda'      => 'required|exists:vendas,id',    
+    ]);
 
-        $itemVenda = ItemVenda::findOrFail($id);
+    $itemVenda = ItemVenda::findOrFail($id);
 
-        $obj->item_id      = $request->item;
-        $obj->venda_id = $request->venda;
-        $obj->quantidade = $request->quantidade;
-        $obj->save();
+    $itemVenda->produto_id = $request->produto;
+    $itemVenda->quantidade = $request->quantidade;
+    $itemVenda->venda_id   = $request->venda;
+    $itemVenda->save();
 
-        return redirect()->route('itemVenda.index', [$idVenda = $itemVenda->venda_id])->with('success', 'Dados salvos com sucesso!');
-    }
+    return redirect()->route('venda.show', [$request->venda])->with('success', 'Produto atualizado com sucesso!');
+}
 
     public function delete($id)
     {

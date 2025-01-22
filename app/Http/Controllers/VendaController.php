@@ -15,7 +15,7 @@ class VendaController extends Controller
     public function index(Request $request)
     {
     return view('venda.index', [
-        'vendas' => Venda::all(),
+        'vendas' => Venda::orderBy('created_at', 'desc')->paginate(10),
         'clientes' => Cliente::all(),
         'users' => User::all()
     ]);

@@ -9,7 +9,7 @@ class ClienteController extends Controller
 {
     public function index(Request $request)
     {
-        return view('cliente.index', ['clientes' => Cliente::all()]);
+        return view('cliente.index', ['clientes' => Cliente::orderBy('created_at', 'desc')->paginate(10)]);
     }
 
     public function create(Request $request)

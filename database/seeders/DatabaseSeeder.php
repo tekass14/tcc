@@ -4,6 +4,12 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Face;
+use App\Models\Categoria;
+use App\Models\Cliente;
+use App\Models\Produto;
+use App\Models\Venda;
+use App\Models\ItemVenda;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -30,6 +36,12 @@ class DatabaseSeeder extends Seeder
         $user->update([
             'face_id' => $face->id
         ]);
+
+        Categoria::factory(10)->create();
+        Cliente::factory(10)->create();
+        Produto::factory(20)->create();
+        Venda::factory(10)->create();
+        ItemVenda::factory(50)->create();
 
     }
 }

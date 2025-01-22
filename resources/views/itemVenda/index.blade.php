@@ -104,6 +104,9 @@
                             </tbody>
                         @endforeach
                     </table>
+                    <div class="pagination">
+                        {{ $itemVendas->links() }}
+                    </div>
                 </div>
             </div>
         </div>
