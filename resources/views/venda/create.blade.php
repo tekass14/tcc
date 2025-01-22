@@ -26,6 +26,9 @@
                                     @endforeach
                                 @endif
                             </select>
+                            @error('responsavel')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
@@ -39,6 +42,9 @@
                                     @endforeach
                                 @endif
                             </select>
+                            @error('cliente')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <!-- Botão de Submissão -->
                         <div class="form-footer">
